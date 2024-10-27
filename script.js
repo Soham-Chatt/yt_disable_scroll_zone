@@ -34,6 +34,8 @@
     // If you have any other controls due to plugins, add them here
   ];
 
+  let rightClickTriggered = false;
+
   function isClickOnControl(target) {
     return CONTROL_SELECTORS.some(selector => target.closest(selector));
   }
@@ -48,6 +50,11 @@
 
     const clickY = event.clientY;
     if (clickY >= (window.innerHeight - BOTTOM_CLICK_THRESHOLD)) {
+      if (rightClickTriggered) {
+        rightClickTriggered = false;
+        return;
+      }
+
       if (!isClickOnControl(event.target)) {
         event.preventDefault();
         event.stopPropagation();
@@ -55,12 +62,21 @@
     }
   }
 
+  function handleRightClick(event) {
+    const clickY = event.clientY;
+    if (clickY >= (window.innerHeight - BOTTOM_CLICK_THRESHOLD)) {
+      rightClickTriggered = true;
+    }
+  }
+
   function addClickListener() {
     window.addEventListener('click', handleClick, true);
+    window.addEventListener('contextmenu', handleRightClick, true);
   }
 
   function removeClickListener() {
     window.removeEventListener('click', handleClick, true);
+    window.removeEventListener('contextmenu', handleRightClick, true);
   }
 
   function onFullscreenChange() {
