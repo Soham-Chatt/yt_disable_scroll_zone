@@ -2,7 +2,7 @@
  * Firefox Add-on Script: Prevents clicks at the bottom of the screen from
  * triggering scrolls while in fullscreen.
  * Author: Soham Chatterjee
- * Last Updated: 2024-10-26
+ * Last Updated: 2024-11-08
  * Description: Blocks clicks within 54px from the bottom in fullscreen mode,
  * unless they are on control elements (like play, pause, volume).
  */
