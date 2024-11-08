@@ -11,5 +11,11 @@
       "96": "icon.svg",
       "128": "icon.svg"
     }
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["script.js"]
+    }
+  ]
 }
