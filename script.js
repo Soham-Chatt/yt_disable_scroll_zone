@@ -10,6 +10,10 @@
 (function () {
   'use strict';
 
+  if (!window.location.href.includes("youtube.com")) {
+    return;
+  }
+
   // Pixels from the bottom where clicks are blocked
   const BOTTOM_CLICK_THRESHOLD = 54;
 
