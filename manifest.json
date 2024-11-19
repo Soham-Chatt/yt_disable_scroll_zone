@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "YouTube Disable Scroll Zone",
-  "version": "1.1.1",
+  "version": "1.2",
   "description": "Disables scrolling by clicks at the bottom of the video",
   "browser_action": {
     "default_title": "YouTube Disable Scroll Zone",
