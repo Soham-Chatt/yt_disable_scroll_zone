@@ -1,17 +1,8 @@
 {
   "manifest_version": 2,
   "name": "YouTube Disable Scroll Zone",
-  "version": "1.2",
+  "version": "1.2.1",
   "description": "Disables scrolling by clicks at the bottom of the video",
-  "browser_action": {
-    "default_title": "YouTube Disable Scroll Zone",
-    "default_icon": {
-      "16": "icon.svg",
-      "48": "icon.svg",
-      "96": "icon.svg",
-      "128": "icon.svg"
-    }
-  },
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
