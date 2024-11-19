@@ -1,10 +1,10 @@
 /**
  * Firefox Add-on Script: Prevents clicks at the bottom of the screen from
- * triggering scrolls while in fullscreen.
+ * triggering scrolls while in fullscreen/theater mode.
  * Author: Soham Chatterjee
- * Last Updated: 2024-11-08
- * Description: Blocks clicks within 54px from the bottom in fullscreen mode,
- * unless they are on control elements (like play, pause, volume).
+ * Last Updated: 2024-11-19
+ * Description: Blocks clicks within 54px from the bottom in fullscreen/theater
+ * mode, unless they are on control elements (like play, pause, volume).
  */
 
 (function () {
@@ -14,34 +14,15 @@
     return;
   }
 
-  // Pixels from the bottom where clicks are blocked
-  const BOTTOM_CLICK_THRESHOLD = 54;
+  let bottomBar = null;
 
-  // Elements that are considered controls and not blocked
-  const CONTROL_SELECTORS = [
-    // Left Controls
-    '.ytp-play-button',
-    '.ytp-next-button',
-    '.ytp-mute-button',
-    '.ytp-volume-slider',
-    '.ytp-time-display',
-
-    // Right Controls
-    '.ytp-fullerscreen-edu-button',
-    '.ytp-autonav-toggle-button',
-    '.ytp-subtitles-button',
-    '.ytp-settings-button',
-    '.ytp-fullscreen-button',
-
-    // Other
-    '.ytp-progress-list'
-    // If you have any other controls due to plugins, add them here
-  ];
-
-  let rightClickTriggered = false;
+  function updateBottomBar() {
+    bottomBar = document.querySelector('.ytp-chrome-bottom');
+  }
 
   function isClickOnControl(target) {
-    return CONTROL_SELECTORS.some(selector => target.closest(selector));
+    if (!bottomBar) return false;
+    return bottomBar.contains(target);
   }
 
   function handleClick(event) {
@@ -52,13 +33,19 @@
       return;
     }
 
-    const clickY = event.clientY;
-    if (clickY >= (window.innerHeight - BOTTOM_CLICK_THRESHOLD)) {
-      if (rightClickTriggered) {
-        rightClickTriggered = false;
+    if (!bottomBar) {
+      updateBottomBar();
+      if (!bottomBar) {
         return;
       }
+    }
 
+    const bottomBarRect = bottomBar.getBoundingClientRect();
+    const clickY = event.clientY;
+
+    // If the click is within the bottom bar area
+    if (clickY >= bottomBarRect.top) {
+      // If the click is not on a control, prevent default action
       if (!isClickOnControl(event.target)) {
         event.preventDefault();
         event.stopPropagation();
@@ -66,21 +53,12 @@
     }
   }
 
-  function handleRightClick(event) {
-    const clickY = event.clientY;
-    if (clickY >= (window.innerHeight - BOTTOM_CLICK_THRESHOLD)) {
-      rightClickTriggered = true;
-    }
-  }
-
   function addClickListener() {
     window.addEventListener('click', handleClick, true);
-    window.addEventListener('contextmenu', handleRightClick, true);
   }
 
   function removeClickListener() {
     window.removeEventListener('click', handleClick, true);
-    window.removeEventListener('contextmenu', handleRightClick, true);
   }
 
   function onFullscreenChange() {
@@ -90,6 +68,7 @@
       document.msFullscreenElement;
 
     if (isFullscreen) {
+      updateBottomBar();
       addClickListener();
     } else {
       removeClickListener();
